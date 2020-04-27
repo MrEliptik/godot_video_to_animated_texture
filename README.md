@@ -1,4 +1,4 @@
-# godot_video_to_animated_texture
+# AnimatedTexture creator
 
 
 ## Tests

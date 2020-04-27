@@ -19,7 +19,7 @@ class GUI(QWidget):
         
         self.resize(480, 360)
         self.center()
-        self.setWindowTitle('AnimatedTexture converter')    
+        self.setWindowTitle('AnimatedTexture creator')    
 
         # Whole window
         layout = QVBoxLayout()
