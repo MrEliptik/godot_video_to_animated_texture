@@ -1,5 +1,6 @@
 from convert_to_tres import convert
 
+import threading
 import sys
 import time
 import os
@@ -8,6 +9,7 @@ from PyQt5.QtWidgets import QWidget, QMessageBox, QApplication, QDesktopWidget, 
         QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit, QFileDialog, QLabel, \
         QProgressBar, QErrorMessage, QComboBox
 
+from queue import Queue
 
 video_extension = ['.mp4', '.mov', '.webm', '.mkv', '.ogv']
 
@@ -17,11 +19,12 @@ class GUI(QWidget):
         super().__init__()
         
         self.initUI()
-        
+        self.msg_q = Queue()
+        self.progress_q = Queue()
         
     def initUI(self):               
         
-        self.resize(480, 360)
+        self.resize(640, 260)
         self.center()
         self.setWindowTitle('AnimatedTexture creator')    
 
@@ -73,6 +76,7 @@ class GUI(QWidget):
         nameLabel.setText('Output FPS:')
         h_layout.addWidget(nameLabel)
         self.fps_line = QLineEdit(self)
+        self.fps_line.setText('25')
         h_layout.addWidget(self.fps_line)
         layout.addLayout(h_layout)
 
@@ -100,9 +104,14 @@ class GUI(QWidget):
         self.progress_bar.hide()
 
         # Eighth Line
+        h_layout = QHBoxLayout()
+        status_label = QLabel(self)
+        status_label.setText('Status: ')
+        h_layout.addWidget(status_label)
         self.log_label = QLabel(self)
         self.log_label.setText('Chose input gif or video, select your destination folder and hit CONVERT')
-        layout.addWidget(self.log_label)
+        h_layout.addWidget(self.log_label)
+        layout.addLayout(h_layout)
         
         self.setLayout(layout)
 
@@ -146,12 +155,18 @@ class GUI(QWidget):
         if dlg.exec_():
             filename = dlg.selectedFiles()
             self.output_texture_line.setText(filename[0])
+
+    def disableWidgets(self, value):
+        for child in self.children():
+            if not isinstance(child, QLabel) and not isinstance(child, QProgressBar) \
+                and not isinstance(child, QVBoxLayout) and not isinstance(child, QHBoxLayout):
+                child.setDisabled(value)
             
     def startConversion(self):
         input_file = self.input_line.text()
         output_frames = self.output_frames_line.text()
         output_texture = self.output_texture_line.text()
-        fps = self.fps_line.text()
+        fps = float(self.fps_line.text())
 
         # Checks if all the required path are valid
         if not input_file or not os.path.isfile(input_file) or not os.path.splitext(input_file)[1] in video_extension:
@@ -169,16 +184,31 @@ class GUI(QWidget):
 
         im_format = self.image_format.currentText()
     
-        convert(input_file, output_frames, output_texture, fps, im_format)
+        x = threading.Thread(target=convert, args=(input_file, output_frames, output_texture, fps, im_format, self.msg_q, self.progress_q,))
+        x.start()
+        #convert(input_file, output_frames, output_texture, fps, im_format)
 
-        '''
+        x = threading.Thread(target=self.log_progress)
+        x.start()
+        self.disableWidgets(True)
+
+    def log_progress(self):
         self.progress_bar.show()
-        count = 0
-        while count < 10:
-            count += 1
-            time.sleep(1)
-            self.progress_bar.setValue(count)
-        '''
+        self.progress_bar.setValue(0)
+
+        msg = ""
+        # Loop until conversion is done
+        while(msg != "Finished!"):
+            msg = self.msg_q.get()
+            if not self.progress_q.empty():
+                progress = self.progress_q.get()
+                self.progress_bar.setValue(progress)
+
+            self.log_label.setText(msg)
+            time.sleep(0.1)
+        
+        self.disableWidgets(False)
+
 
     def showError(self, msg):
         err = QMessageBox()

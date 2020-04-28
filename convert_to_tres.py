@@ -48,24 +48,43 @@ def saveFramesToDisk(frames, path, name, image_format):
     for (i, frame) in enumerate(frames):
         cv.imwrite(os.path.join(path, name + '_{}{}'.format(i, image_format)), frame)
 
-def convert(input, output_frames, output_texture, fps, image_format):
+def convert(input, output_frames, output_texture, fps, image_format, msg_q=None, progress_q=None):
     name, ext = os.path.splitext(input)
 
     if ext in video_extension:
+        if msg_q:
+            msg_q.put('Extracting frames from video..')
         frames = extractFromVideo(input)
     else:
+        if msg_q:
+            msg_q.put('Extracting frames from GIF..')
         frames = extractFromGIF(input)
 
+    if msg_q:
+        msg_q.put('Saving frames to disk..')
+    if progress_q:
+        progress_q.put(30)
     saveFramesToDisk(frames, output_frames, 'frame', image_format)
 
+    if msg_q:
+        msg_q.put('Listing frames..')
+    if progress_q:
+        progress_q.put(70)
     frames_str = os.listdir(output_frames)
     frames_str = [f.lower() for f in frames_str if f.endswith('.jpeg')]
     sorted(frames_str)
 
     name, ext = os.path.splitext(input)
     if ext == "": output_texture = os.path.join(name, '.tres')
+    if msg_q:
+        msg_q.put('Constructing .tres file..')
+    if progress_q:
+        progress_q.put(90)
     framesToTres(frames_str, fps, output_texture)
-    
+    if progress_q:
+        progress_q.put(100)
+    if msg_q:
+        msg_q.put('Finished!')
 
 
 if __name__ == "__main__":
