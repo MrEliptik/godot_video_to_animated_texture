@@ -91,10 +91,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Convert GIF or videos into frames and then create '
                     'AnimatedTexture .tres')
-    parser.add_argument('--input', type=str, help='path to input (video/gif)')
-    parser.add_argument('--output_frames_path', type=str, help='path where the frames will be saved')
-    parser.add_argument('--output_texture_path', type=str, help='name and path of the AnimatedTexture file generated')
-    parser.add_argument('--fps', type=int, help='fps target of the AnimatedTexture')
+    parser.add_argument('--input', type=str, required=True, help='path to input (video/gif)')
+    parser.add_argument('--output_frames_path', type=str, required=True, help='path where the frames will be saved')
+    parser.add_argument('--output_texture_path', type=str, required=True, help='name and path of the AnimatedTexture file generated')
+    parser.add_argument('--fps', type=int, default=25, required=False, help='fps target of the AnimatedTexture')
     parser.add_argument('--image_format', choices=['.jpeg', '.jpg', '.png', '.bmp'], type=str, required=False, default='.jpeg', 
         help='frames image format [\'.jpeg\', \'.png\', \'.bmp\']')
     args = parser.parse_args()
