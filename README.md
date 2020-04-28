@@ -1,5 +1,10 @@
 # AnimatedTexture creator
 
+## How to use
+
+### Command line
+
+### GUI
 
 ## Tests
 
@@ -21,8 +26,9 @@
 
 ## TODO:
 
-- [ ] Show progress
-- [ ] Update log label based on what's happening
+- [X] Disable buttons during processing
+- [X] Show progress
+- [X] Update log label based on what's happening
 - [X] Handle errors
 - [X] Handle file selection (write selected folder/file to textedit, and use this value for the next steps)
     - [X] Input
