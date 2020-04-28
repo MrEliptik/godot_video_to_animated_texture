@@ -109,7 +109,7 @@ class GUI(QWidget):
         status_label.setText('Status: ')
         h_layout.addWidget(status_label)
         self.log_label = QLabel(self)
-        self.log_label.setText('Chose input gif or video, select your destination folder and hit CONVERT')
+        self.log_label.setText('Choose input gif or video, select your destination folder and hit CONVERT')
         h_layout.addWidget(self.log_label)
         layout.addLayout(h_layout)
         
