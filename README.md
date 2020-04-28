@@ -4,7 +4,42 @@
 
 ### Command line
 
+Type `python convert_to_tres.py` with the right arguements to launch in command line mode.
+
+Arguments:
+
+- `--input`: your input video or gif
+- `--output_frames_path`: your output folder for the extracted frames
+- `--output_texture_path`: your output file for the AnimatedTexture
+- `--fps`: output desired FPS
+- `--image_format`: image format of the extracted frames
+
+Type `python convert_to_tres.py --help` for more informations:
+
+    python convert_to_tres.py --help
+    usage: convert_to_tres.py [-h] --input INPUT --output_frames_path
+                          OUTPUT_FRAMES_PATH --output_texture_path
+                          OUTPUT_TEXTURE_PATH [--fps FPS]
+                          [--image_format {.jpeg,.jpg,.png,.bmp}]
+
+    Convert GIF or videos into frames and then create AnimatedTexture .tres
+
+    optional arguments:
+        -h, --help            show this help message and exit
+        --input INPUT         path to input (video/gif)
+        --output_frames_path OUTPUT_FRAMES_PATH
+                                path where the frames will be saved
+        --output_texture_path OUTPUT_TEXTURE_PATH
+                                name and path of the AnimatedTexture file generated
+        --fps FPS             fps target of the AnimatedTexture
+        --image_format {.jpeg,.jpg,.png,.bmp}
+                                frames image format ['.jpeg', '.png', '.bmp']
+
 ### GUI
+
+Type `python convert_to_tres_GUI.py` to launch in GUI mode
+
+![gui screenshot](readme_resources/GUI.png)
 
 ## Tests
 
