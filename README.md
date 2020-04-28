@@ -21,14 +21,14 @@
 
 ## TODO:
 
-- [ ] Handle file selection (write selected folder/file to textedit, and use this value for the next steps)
-    - [ ] Input
-    - [ ] Output frames
-    - [ ] Output texture
-- [ ] Handle input text 
 - [ ] Show progress
 - [ ] Update log label based on what's happening
-- [ ] Handle errors
+- [X] Handle errors
+- [X] Handle file selection (write selected folder/file to textedit, and use this value for the next steps)
+    - [X] Input
+    - [X] Output frames
+    - [X] Output texture
+- [X] Handle input text 
 - [X] Basic layout
 - [X] Requires components
 - [X] Connect buttons to callback methods
